@@ -75,7 +75,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -111,6 +115,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="external\catch.hpp" />
+    <ClInclude Include="src\arena.hpp" />
+    <ClInclude Include="src\binary\bit-ops.hpp" />
+    <ClInclude Include="src\class-utils.hpp" />
+    <ClInclude Include="src\compression\compression.hpp" />
+    <ClInclude Include="src\ext\flat-set.hpp" />
+    <ClInclude Include="src\text\text-utils.hpp" />
+    <ClInclude Include="src\ext\type-utils.hpp" />
+    <ClInclude Include="src\text\format.hpp" />
+    <ClInclude Include="test\unittest.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="test\arena-test.cpp" />
+    <ClCompile Include="test\binary\bit-ops-test.cpp" />
+    <ClCompile Include="test\compression\compression-test.cpp" />
+    <ClCompile Include="test\ext\flat-set-test.cpp" />
+    <ClCompile Include="test\Setup.cpp" />
+    <ClCompile Include="test\text\format-test.cpp" />
+    <ClCompile Include="test\text\text-utils-test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
