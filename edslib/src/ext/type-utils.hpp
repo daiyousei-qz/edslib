@@ -3,7 +3,7 @@
 #include <iterator>
 
 // Additional type_traits
-namespace eds::ext
+namespace eds::type
 {
 	namespace detail
 	{

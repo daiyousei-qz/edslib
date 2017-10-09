@@ -77,7 +77,7 @@ namespace eds::compression
 		};
 
 		// expands node into the sequence it encodes
-		inline void DecodeHelper(std::vector<uint8_t>& output, TierNode* node)
+		inline void ExpandDecodedSeq(std::vector<uint8_t>& output, TierNode* node)
 		{
 			output.resize(output.size() + node->length);
 
@@ -96,7 +96,7 @@ namespace eds::compression
 	template <typename TIter>
 	inline auto EncodeLzw(TIter begin, TIter end)
 	{
-		static_assert(eds::ext::is_iterator_of_v<TIter, uint8_t>, "TIter must be an iterator type of uint8_t");
+		static_assert(eds::type::is_iterator_of_v<TIter, uint8_t>, "TIter must be an iterator type of uint8_t");
 
 		using namespace std;
 		using namespace eds::compression::detail;
@@ -129,7 +129,7 @@ namespace eds::compression
 	template <typename TIter>
 	inline auto DecodeLzw(TIter begin, TIter end)
 	{
-		static_assert(eds::ext::is_iterator_of_v<TIter, uint8_t>, "TIter must be an iterator type of uint8_t");
+		static_assert(eds::type::is_iterator_of_v<TIter, uint8_t>, "TIter must be an iterator type of uint8_t");
 
 		using namespace std;
 		using namespace eds::compression::detail;
@@ -154,11 +154,11 @@ namespace eds::compression
 			auto old_size = result.size();
 			if (code < code_lookup.size())
 			{
-				DecodeHelper(result, code_lookup[code]);
+				ExpandDecodedSeq(result, code_lookup[code]);
 			}
 			else if (last_seq_tail && code == code_lookup.size())
 			{
-				DecodeHelper(result, last_seq_tail);
+				ExpandDecodedSeq(result, last_seq_tail);
 				result.push_back(result[old_size]);
 			}
 			else

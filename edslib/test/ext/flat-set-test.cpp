@@ -5,7 +5,7 @@
 
 namespace
 {
-	bool TestEqual(const eds::ext::FlatSet<int>& set, std::vector<int> v)
+	bool TestEqual(const eds::FlatSet<int>& set, std::vector<int> v)
 	{
 		std::sort(v.begin(), v.end());
 		return set.data() == v;
@@ -15,7 +15,7 @@ namespace
 TEST_CASE("::FlatSet")
 {
 	using namespace std;
-	using namespace eds::ext;
+	using namespace eds;
 
 	SECTION("Construction")
 	{

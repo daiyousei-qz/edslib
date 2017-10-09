@@ -8,9 +8,9 @@
     <ClInclude Include="src\ext\type-utils.hpp" />
     <ClInclude Include="src\text\format.hpp" />
     <ClInclude Include="src\arena.hpp" />
-    <ClInclude Include="src\class-utils.hpp" />
     <ClInclude Include="external\catch.hpp" />
     <ClInclude Include="src\text\text-utils.hpp" />
+    <ClInclude Include="src\lang-utils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\arena-test.cpp" />

@@ -12,7 +12,7 @@
 #include <algorithm>
 #include <type_traits>
 
-namespace eds::ext
+namespace eds
 {
 	// FlatSet
 	//
@@ -202,7 +202,7 @@ namespace eds::ext
 		template <typename InputIt>
 		void insert(InputIt first, InputIt last)
 		{
-			static_assert(eds::ext::is_iterator_v<InputIt>, "InputIt must be an iterator type");
+			static_assert(eds::type::is_iterator_v<InputIt>, "InputIt must be an iterator type");
 
 			container_.insert(container_.end(), first, last);
 			std::sort(container_.begin(), container_.end(), key_comp());

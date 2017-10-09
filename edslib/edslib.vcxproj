@@ -118,7 +118,7 @@
     <ClInclude Include="external\catch.hpp" />
     <ClInclude Include="src\arena.hpp" />
     <ClInclude Include="src\binary\bit-ops.hpp" />
-    <ClInclude Include="src\class-utils.hpp" />
+    <ClInclude Include="src\lang-utils.hpp" />
     <ClInclude Include="src\compression\compression.hpp" />
     <ClInclude Include="src\ext\flat-set.hpp" />
     <ClInclude Include="src\text\text-utils.hpp" />
