@@ -11,6 +11,7 @@
     <ClInclude Include="external\catch.hpp" />
     <ClInclude Include="src\text\text-utils.hpp" />
     <ClInclude Include="src\lang-utils.hpp" />
+    <ClInclude Include="src\binary\binary.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\arena-test.cpp" />
