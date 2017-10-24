@@ -23,6 +23,6 @@ TEST_CASE("::compression")
 		auto e = EncodeLzw(v.begin(), v.end());
 		auto d = DecodeLzw(e.begin(), e.end());
 
-		REQUIRE(d == v);
+		CHECK(d == v);
 	}
 }

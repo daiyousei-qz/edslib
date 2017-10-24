@@ -43,6 +43,6 @@ TEST_CASE("::bit-ops")
 			result.push_back(reader.Read(len));
 		}
 
-		REQUIRE(result == v_data);
+		CHECK(result == v_data);
 	}
 }

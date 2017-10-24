@@ -78,14 +78,14 @@ namespace eds::binary
 
 	namespace detail
 	{
-		template <typename T>
+		template<typename T>
 		constexpr bool IsRawDataType =
 			std::is_fundamental_v<T> || std::is_enum_v<T>;
 	}
 
 	// Basic C++ types
 	//
-	template <
+	template<
 		typename T,
 		typename = std::enable_if_t<detail::IsRawDataType<T>>>
 		BinaryWriter& operator<<(BinaryWriter& writer, const T& data)
@@ -96,7 +96,7 @@ namespace eds::binary
 		writer.Write(begin, end);
 		return writer;
 	}
-	template <
+	template<
 		typename T,
 		typename = std::enable_if_t<detail::IsRawDataType<T>>>
 		BinaryReader& operator>>(BinaryReader& reader, T& data)
@@ -109,7 +109,7 @@ namespace eds::binary
 
 	// std::complex
 	//
-	template <typename T>
+	template<typename T>
 	BinaryWriter& operator<<(BinaryWriter& writer, const std::complex<T>& data)
 	{
 		writer << data.real;
@@ -117,7 +117,7 @@ namespace eds::binary
 
 		return writer;
 	}
-	template <typename T>
+	template<typename T>
 	BinaryReader& operator<<(BinaryReader& reader, std::complex<T>& data)
 	{
 		reader >> data.real;
@@ -128,7 +128,7 @@ namespace eds::binary
 
 	// std::pair
 	//
-	template <typename T, typename U>
+	template<typename T, typename U>
 	BinaryWriter& operator<<(BinaryWriter& writer, const std::pair<T, U>& data)
 	{
 		writer << data.first;
@@ -136,7 +136,7 @@ namespace eds::binary
 
 		return writer;
 	}
-	template <typename T, typename U>
+	template<typename T, typename U>
 	BinaryReader& operator>>(BinaryReader& reader, std::pair<T, U>& data)
 	{
 		reader >> data.first;
@@ -147,7 +147,7 @@ namespace eds::binary
 
 	// std::basic_string
 	//
-	template <typename TChar>
+	template<typename TChar>
 	BinaryWriter& operator<<(BinaryWriter& writer, const std::basic_string<TChar>& data)
 	{
 		auto begin = reinterpret_cast<const uint8_t*>(data.data());
@@ -158,7 +158,7 @@ namespace eds::binary
 
 		return writer;
 	}
-	template <typename TChar>
+	template<typename TChar>
 	BinaryReader& operator>>(BinaryReader& reader, std::basic_string<TChar>& data)
 	{
 		int data_sz;
@@ -173,7 +173,7 @@ namespace eds::binary
 
 	// std::vector
 	//
-	template <typename T>
+	template<typename T>
 	BinaryWriter& operator<<(BinaryWriter& writer, const std::vector<T>& data)
 	{
 		int sz = data.size();
@@ -185,7 +185,7 @@ namespace eds::binary
 
 		return writer;
 	}
-	template <typename T>
+	template<typename T>
 	BinaryReader& operator>>(BinaryReader& reader, std::vector<T>& data)
 	{
 		int sz;

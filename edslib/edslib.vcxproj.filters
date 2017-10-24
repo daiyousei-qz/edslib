@@ -12,6 +12,8 @@
     <ClInclude Include="src\text\text-utils.hpp" />
     <ClInclude Include="src\lang-utils.hpp" />
     <ClInclude Include="src\binary\binary.h" />
+    <ClInclude Include="src\lang-helper.h" />
+    <ClInclude Include="src\array-ref.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\arena-test.cpp" />
@@ -21,5 +23,7 @@
     <ClCompile Include="test\text\format-test.cpp" />
     <ClCompile Include="test\ext\flat-set-test.cpp" />
     <ClCompile Include="test\text\text-utils-test.cpp" />
+    <ClCompile Include="test\ext\type-utils-test.cpp" />
+    <ClCompile Include="test\array-ref-test.cpp" />
   </ItemGroup>
 </Project>

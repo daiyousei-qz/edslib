@@ -8,10 +8,10 @@
 // Bit operations
 namespace eds
 {
-	template <typename TIter>
+	template<typename TIter>
 	class BitReader
 	{
-		static_assert(eds::type::is_iterator_of_v<TIter, uint8_t>, "TIter must be an iterator type of uint8_t");
+		static_assert(type::Constraint<TIter>(type::is_iterator_of<uint8_t>), "TIter must be an iterator type of uint8_t");
 
 	public:
 		BitReader(TIter begin, TIter end)

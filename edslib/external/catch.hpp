@@ -2028,9 +2028,9 @@ namespace Catch {
 // #included from: catch_platform.h
 #define TWOBLUECUBES_CATCH_PLATFORM_H_INCLUDED
 
-#if defined(__MAC_OS_X_VERSION_MIN_REQUIRED)
+#if defined(__MAC_OS_X_VERSION_MIN_CHECKD)
 #  define CATCH_PLATFORM_MAC
-#elif  defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
+#elif  defined(__IPHONE_OS_VERSION_MIN_CHECKD)
 #  define CATCH_PLATFORM_IPHONE
 #elif defined(linux) || defined(__linux) || defined(__linux__)
 #  define CATCH_PLATFORM_LINUX
@@ -2115,7 +2115,7 @@ namespace Catch {
     resultBuilder.react();
 
 ///////////////////////////////////////////////////////////////////////////////
-// Another way to speed-up compilation is to omit local try-catch for REQUIRE*
+// Another way to speed-up compilation is to omit local try-catch for CHECK*
 // macros.
 // This can potentially cause false negative, if the test code catches
 // the exception before it propagates back up to the runner.
@@ -2741,7 +2741,7 @@ namespace Catch {
 
 #if defined(CATCH_CONFIG_CPP11_TYPE_TRAITS)
 
-			template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+			template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
 			Approx operator()(T value) {
 				Approx approx(static_cast<double>(value));
 				approx.epsilon(m_epsilon);
@@ -2750,11 +2750,11 @@ namespace Catch {
 				return approx;
 			}
 
-			template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+			template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
 			explicit Approx(T value) : Approx(static_cast<double>(value))
 			{}
 
-			template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+			template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
 			friend bool operator == (const T& lhs, Approx const& rhs) {
 				// Thanks to Richard Harris for his help refining this formula
 				auto lhs_v = double(lhs);
@@ -2765,54 +2765,54 @@ namespace Catch {
 				return std::fabs(lhs_v - rhs.m_value) < rhs.m_margin;
 			}
 
-			template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+			template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
 			friend bool operator == (Approx const& lhs, const T& rhs) {
 				return operator==(rhs, lhs);
 			}
 
-			template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+			template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
 			friend bool operator != (T lhs, Approx const& rhs) {
 				return !operator==(lhs, rhs);
 			}
 
-			template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+			template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
 			friend bool operator != (Approx const& lhs, T rhs) {
 				return !operator==(rhs, lhs);
 			}
 
-			template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+			template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
 			friend bool operator <= (T lhs, Approx const& rhs) {
 				return double(lhs) < rhs.m_value || lhs == rhs;
 			}
 
-			template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+			template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
 			friend bool operator <= (Approx const& lhs, T rhs) {
 				return lhs.m_value < double(rhs) || lhs == rhs;
 			}
 
-			template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+			template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
 			friend bool operator >= (T lhs, Approx const& rhs) {
 				return double(lhs) > rhs.m_value || lhs == rhs;
 			}
 
-			template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+			template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
 			friend bool operator >= (Approx const& lhs, T rhs) {
 				return lhs.m_value > double(rhs) || lhs == rhs;
 			}
 
-			template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+			template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
 			Approx& epsilon(T newEpsilon) {
 				m_epsilon = double(newEpsilon);
 				return *this;
 			}
 
-			template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+			template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
 			Approx& margin(T newMargin) {
 				m_margin = double(newMargin);
 				return *this;
 			}
 
-			template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+			template<typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
 			Approx& scale(T newScale) {
 				m_scale = double(newScale);
 				return *this;
@@ -6863,7 +6863,7 @@ namespace Catch {
 				// This just means the test was aborted due to failure
 			}
 			catch (...) {
-				// Under CATCH_CONFIG_FAST_COMPILE, unexpected exceptions under REQUIRE assertions
+				// Under CATCH_CONFIG_FAST_COMPILE, unexpected exceptions under CHECK assertions
 				// are reported without translation at the point of origin.
 				if (m_shouldReportUnexpected) {
 					makeUnexpectedResultBuilder().useActiveException();
@@ -11440,17 +11440,17 @@ int main(int argc, char * const argv[]) {
 #ifdef CATCH_CONFIG_PREFIX_ALL
 
 #if defined(CATCH_CONFIG_FAST_COMPILE)
-#define CATCH_REQUIRE( expr ) INTERNAL_CATCH_TEST_NO_TRY( "CATCH_REQUIRE", Catch::ResultDisposition::Normal, expr )
-#define CATCH_REQUIRE_FALSE( expr ) INTERNAL_CATCH_TEST_NO_TRY( "CATCH_REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, expr )
+#define CATCH_CHECK( expr ) INTERNAL_CATCH_TEST_NO_TRY( "CATCH_CHECK", Catch::ResultDisposition::Normal, expr )
+#define CATCH_CHECK_FALSE( expr ) INTERNAL_CATCH_TEST_NO_TRY( "CATCH_CHECK_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, expr )
 #else
-#define CATCH_REQUIRE( expr ) INTERNAL_CATCH_TEST( "CATCH_REQUIRE", Catch::ResultDisposition::Normal, expr )
-#define CATCH_REQUIRE_FALSE( expr ) INTERNAL_CATCH_TEST( "CATCH_REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, expr  )
+#define CATCH_CHECK( expr ) INTERNAL_CATCH_TEST( "CATCH_CHECK", Catch::ResultDisposition::Normal, expr )
+#define CATCH_CHECK_FALSE( expr ) INTERNAL_CATCH_TEST( "CATCH_CHECK_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, expr  )
 #endif
 
-#define CATCH_REQUIRE_THROWS( expr ) INTERNAL_CATCH_THROWS( "CATCH_REQUIRE_THROWS", Catch::ResultDisposition::Normal, "", expr )
-#define CATCH_REQUIRE_THROWS_AS( expr, exceptionType ) INTERNAL_CATCH_THROWS_AS( "CATCH_REQUIRE_THROWS_AS", exceptionType, Catch::ResultDisposition::Normal, expr )
-#define CATCH_REQUIRE_THROWS_WITH( expr, matcher ) INTERNAL_CATCH_THROWS( "CATCH_REQUIRE_THROWS_WITH", Catch::ResultDisposition::Normal, matcher, expr )
-#define CATCH_REQUIRE_NOTHROW( expr ) INTERNAL_CATCH_NO_THROW( "CATCH_REQUIRE_NOTHROW", Catch::ResultDisposition::Normal, expr )
+#define CATCH_CHECK_THROWS( expr ) INTERNAL_CATCH_THROWS( "CATCH_CHECK_THROWS", Catch::ResultDisposition::Normal, "", expr )
+#define CATCH_CHECK_THROWS_AS( expr, exceptionType ) INTERNAL_CATCH_THROWS_AS( "CATCH_CHECK_THROWS_AS", exceptionType, Catch::ResultDisposition::Normal, expr )
+#define CATCH_CHECK_THROWS_WITH( expr, matcher ) INTERNAL_CATCH_THROWS( "CATCH_CHECK_THROWS_WITH", Catch::ResultDisposition::Normal, matcher, expr )
+#define CATCH_CHECK_NOTHROW( expr ) INTERNAL_CATCH_NO_THROW( "CATCH_CHECK_NOTHROW", Catch::ResultDisposition::Normal, expr )
 
 #define CATCH_CHECK( expr ) INTERNAL_CATCH_TEST( "CATCH_CHECK", Catch::ResultDisposition::ContinueOnFailure, expr )
 #define CATCH_CHECK_FALSE( expr ) INTERNAL_CATCH_TEST( "CATCH_CHECK_FALSE", Catch::ResultDisposition::ContinueOnFailure | Catch::ResultDisposition::FalseTest, expr )
@@ -11466,9 +11466,9 @@ int main(int argc, char * const argv[]) {
 #define CATCH_CHECK_THAT( arg, matcher ) INTERNAL_CHECK_THAT( "CATCH_CHECK_THAT", matcher, Catch::ResultDisposition::ContinueOnFailure, arg )
 
 #if defined(CATCH_CONFIG_FAST_COMPILE)
-#define CATCH_REQUIRE_THAT( arg, matcher ) INTERNAL_CHECK_THAT_NO_TRY( "CATCH_REQUIRE_THAT", matcher, Catch::ResultDisposition::Normal, arg )
+#define CATCH_CHECK_THAT( arg, matcher ) INTERNAL_CHECK_THAT_NO_TRY( "CATCH_CHECK_THAT", matcher, Catch::ResultDisposition::Normal, arg )
 #else
-#define CATCH_REQUIRE_THAT( arg, matcher ) INTERNAL_CHECK_THAT( "CATCH_REQUIRE_THAT", matcher, Catch::ResultDisposition::Normal, arg )
+#define CATCH_CHECK_THAT( arg, matcher ) INTERNAL_CHECK_THAT( "CATCH_CHECK_THAT", matcher, Catch::ResultDisposition::Normal, arg )
 #endif
 
 #define CATCH_INFO( msg ) INTERNAL_CATCH_INFO( "CATCH_INFO", msg )
@@ -11521,18 +11521,18 @@ int main(int argc, char * const argv[]) {
 #else
 
 #if defined(CATCH_CONFIG_FAST_COMPILE)
-#define REQUIRE( expr ) INTERNAL_CATCH_TEST_NO_TRY( "REQUIRE", Catch::ResultDisposition::Normal, expr )
-#define REQUIRE_FALSE( expr ) INTERNAL_CATCH_TEST_NO_TRY( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, expr )
+#define CHECK( expr ) INTERNAL_CATCH_TEST_NO_TRY( "CHECK", Catch::ResultDisposition::Normal, expr )
+#define CHECK_FALSE( expr ) INTERNAL_CATCH_TEST_NO_TRY( "CHECK_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, expr )
 
 #else
-#define REQUIRE( expr ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, expr  )
-#define REQUIRE_FALSE( expr ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, expr )
+#define CHECK( expr ) INTERNAL_CATCH_TEST( "CHECK", Catch::ResultDisposition::Normal, expr  )
+#define CHECK_FALSE( expr ) INTERNAL_CATCH_TEST( "CHECK_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, expr )
 #endif
 
-#define REQUIRE_THROWS( expr ) INTERNAL_CATCH_THROWS( "REQUIRE_THROWS", Catch::ResultDisposition::Normal, "", expr )
-#define REQUIRE_THROWS_AS( expr, exceptionType ) INTERNAL_CATCH_THROWS_AS( "REQUIRE_THROWS_AS", exceptionType, Catch::ResultDisposition::Normal, expr )
-#define REQUIRE_THROWS_WITH( expr, matcher ) INTERNAL_CATCH_THROWS( "REQUIRE_THROWS_WITH", Catch::ResultDisposition::Normal, matcher, expr )
-#define REQUIRE_NOTHROW( expr ) INTERNAL_CATCH_NO_THROW( "REQUIRE_NOTHROW", Catch::ResultDisposition::Normal, expr )
+#define CHECK_THROWS( expr ) INTERNAL_CATCH_THROWS( "CHECK_THROWS", Catch::ResultDisposition::Normal, "", expr )
+#define CHECK_THROWS_AS( expr, exceptionType ) INTERNAL_CATCH_THROWS_AS( "CHECK_THROWS_AS", exceptionType, Catch::ResultDisposition::Normal, expr )
+#define CHECK_THROWS_WITH( expr, matcher ) INTERNAL_CATCH_THROWS( "CHECK_THROWS_WITH", Catch::ResultDisposition::Normal, matcher, expr )
+#define CHECK_NOTHROW( expr ) INTERNAL_CATCH_NO_THROW( "CHECK_NOTHROW", Catch::ResultDisposition::Normal, expr )
 
 #define CHECK( expr ) INTERNAL_CATCH_TEST( "CHECK", Catch::ResultDisposition::ContinueOnFailure, expr )
 #define CHECK_FALSE( expr ) INTERNAL_CATCH_TEST( "CHECK_FALSE", Catch::ResultDisposition::ContinueOnFailure | Catch::ResultDisposition::FalseTest, expr )
@@ -11548,9 +11548,9 @@ int main(int argc, char * const argv[]) {
 #define CHECK_THAT( arg, matcher ) INTERNAL_CHECK_THAT( "CHECK_THAT", matcher, Catch::ResultDisposition::ContinueOnFailure, arg )
 
 #if defined(CATCH_CONFIG_FAST_COMPILE)
-#define REQUIRE_THAT( arg, matcher ) INTERNAL_CHECK_THAT_NO_TRY( "REQUIRE_THAT", matcher, Catch::ResultDisposition::Normal, arg )
+#define CHECK_THAT( arg, matcher ) INTERNAL_CHECK_THAT_NO_TRY( "CHECK_THAT", matcher, Catch::ResultDisposition::Normal, arg )
 #else
-#define REQUIRE_THAT( arg, matcher ) INTERNAL_CHECK_THAT( "REQUIRE_THAT", matcher, Catch::ResultDisposition::Normal, arg )
+#define CHECK_THAT( arg, matcher ) INTERNAL_CHECK_THAT( "CHECK_THAT", matcher, Catch::ResultDisposition::Normal, arg )
 #endif
 
 #define INFO( msg ) INTERNAL_CATCH_INFO( "INFO", msg )

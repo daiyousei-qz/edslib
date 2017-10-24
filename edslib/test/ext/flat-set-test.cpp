@@ -32,9 +32,9 @@ TEST_CASE("::FlatSet")
 
 		auto test_set = [&](FlatSet<int>& s)
 		{
-			REQUIRE(s.size() == arr.size());
+			CHECK(s.size() == arr.size());
 			// Note set is ordered
-			REQUIRE(std::equal(s.begin(), s.end(), arr.begin(), arr.end()));
+			CHECK(std::equal(s.begin(), s.end(), arr.begin(), arr.end()));
 		};
 
 		test_set(s1);
@@ -46,11 +46,11 @@ TEST_CASE("::FlatSet")
 	SECTION("Access")
 	{
 		FlatSet<int> s = { 1,2,3,4,5,6,7,8 };
-		REQUIRE(s.count(1) == 1);
-		REQUIRE(s.count(0) == 0);
-		REQUIRE(s.find(9) == s.end());
-		REQUIRE(s.at(3) == 4);
-		REQUIRE(s[6] == 7);
+		CHECK(s.count(1) == 1);
+		CHECK(s.count(0) == 0);
+		CHECK(s.find(9) == s.end());
+		CHECK(s.at(3) == 4);
+		CHECK(s[6] == 7);
 	}
 
 	SECTION("Swap")
@@ -61,11 +61,11 @@ TEST_CASE("::FlatSet")
 		auto v3 = v1;
 		auto v4 = v2;
 		v3.swap(v4);
-		REQUIRE(v3 == v2);
-		REQUIRE(v4 == v1);
+		CHECK(v3 == v2);
+		CHECK(v4 == v1);
 		v3.swap(v4);
-		REQUIRE(v3 == v1);
-		REQUIRE(v4 == v2);
+		CHECK(v3 == v1);
+		CHECK(v4 == v2);
 	}
 
 	SECTION("Insertion And Erasure")
@@ -73,17 +73,17 @@ TEST_CASE("::FlatSet")
 		FlatSet<int> v;
 		v.insert({ 1,2,3 });
 
-		REQUIRE(TestEqual(v, { 1,2,3 }));
+		CHECK(TestEqual(v, { 1,2,3 }));
 
 		v.insert(4);
-		REQUIRE(TestEqual(v, { 1,2,3,4 }));
+		CHECK(TestEqual(v, { 1,2,3,4 }));
 
 		int arr[] = { 4,5,6,7 };
 		v.insert(begin(arr), end(arr));
-		REQUIRE(TestEqual(v, { 1,2,3,4,5,6,7 }));
+		CHECK(TestEqual(v, { 1,2,3,4,5,6,7 }));
 
 		v.erase(1);
 		v.erase(6);
-		REQUIRE(TestEqual(v, { 2,3,4,5,7 }));
+		CHECK(TestEqual(v, { 2,3,4,5,7 }));
 	}
 }

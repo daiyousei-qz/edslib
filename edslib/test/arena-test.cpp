@@ -38,9 +38,9 @@ TEST_CASE("arena::")
 		Arena arena;
 		int *p1 = arena.Construct<int>(42);
 		float *p2 = arena.Construct<float>(3.14f);
-		REQUIRE(*p1 == 42);
-		REQUIRE(*p2 == 3.14f);
-		REQUIRE(arena.GetByteUsed() == sizeof(int) + sizeof(float));
+		CHECK(*p1 == 42);
+		CHECK(*p2 == 3.14f);
+		CHECK(arena.GetByteUsed() == sizeof(int) + sizeof(float));
 	}
 
 	SECTION("User Types With Dtor")
@@ -51,15 +51,15 @@ TEST_CASE("arena::")
 			Arena arena;
 			auto inc1 = arena.Construct<Inc>(&count);
 			auto inc2 = arena.Construct<Inc>(&count);
-			REQUIRE(count == 2);
+			CHECK(count == 2);
 		}
-		REQUIRE(count == 0);
+		CHECK(count == 0);
 	}
 
 	SECTION("Random Allocation")
 	{
 		Arena arena;
-		REQUIRE_NOTHROW(DoAllocTest(arena, 1000));
+		CHECK_NOTHROW(DoAllocTest(arena, 1000));
 	}
 
 }

@@ -95,7 +95,7 @@ namespace eds
 			}
 		}
 
-		template <typename T, typename ...TArgs>
+		template<typename T, typename ...TArgs>
 		T* Construct(TArgs&& ...args)
 		{
 			auto ptr =Allocate(sizeof(T));

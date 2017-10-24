@@ -28,10 +28,10 @@ namespace eds::text
 	///<summary>Create a formatted string in ASCII.</summary>
 	///<param name='formatter'>A text template to construct the formatted string.</param>
 	///<param name='args'>Variadic parameters referred in <c>formatter</c>.</param>
-	template <typename ... TArgs>
+	template<typename ... TArgs>
 	std::string Format(const char *formatter, const TArgs &...args);
 
-	template <typename ...TArgs>
+	template<typename ...TArgs>
 	void PrintFormatted(const char* formatter, const TArgs& ...args);
 
 
@@ -54,7 +54,7 @@ namespace eds::text
 		// no whitespace allowed in brace pair
 		// double typed brace to generate raw brace character
 		// currently counts of args is limited under 10
-		template <typename TStream, typename ... TArgs>
+		template<typename TStream, typename ... TArgs>
 		void FormatInternal(TStream& output, const char* formatter, const TArgs& ...args)
 		{
 			static_assert(sizeof...(args) < 11, "more than 10 args not supported.");
@@ -88,6 +88,8 @@ namespace eds::text
 						}
 						else
 						{
+							assert(isdigit(*p));
+
 							// id explicitly specified, should in [0, 10)
 							id = Consume(p) - '0';
 							FormatAssert(id >= 0 && id <= 9, "argument id must be within [0,10).");
@@ -119,7 +121,7 @@ namespace eds::text
 
 	} // namespace detail
 
-	template <typename ...TArgs>
+	template<typename ...TArgs>
 	inline std::string Format(const char *formatter, const TArgs& ...args)
 	{
 		std::stringstream buf;
@@ -128,7 +130,7 @@ namespace eds::text
 		return buf.str();
 	}
 
-	template <typename ...TArgs>
+	template<typename ...TArgs>
 	inline void PrintFormatted(const char* formatter, const TArgs& ...args)
 	{
 		detail::FormatInternal(std::cout, formatter, args...);

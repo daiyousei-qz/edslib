@@ -16,7 +16,7 @@ namespace eds
 {
 	// FlatSet
 	//
-	template <typename Key,
+	template<typename Key,
 			  typename Compare = std::less<Key>,
 			  typename Allocator = std::allocator<Key>>
 	class FlatSet
@@ -45,7 +45,7 @@ namespace eds
 	public:
 		// ctor
 		FlatSet() { }
-		template <typename InputIt>
+		template<typename InputIt>
 		FlatSet(InputIt first, InputIt last)
 		{
 			assign(first, last);
@@ -84,7 +84,7 @@ namespace eds
 		//
 		// assign
 		//
-		template <typename InputIt>
+		template<typename InputIt>
 		void assign(InputIt first, InputIt last)
 		{
 			clear();
@@ -165,7 +165,7 @@ namespace eds
 			container_.clear();
 		}
 
-		template <typename ... TArgs>
+		template<typename ... TArgs>
 		std::pair<iterator, bool> emplace(TArgs&& ... args)
 		{
 			// TODO: performance warning
@@ -199,10 +199,10 @@ namespace eds
 			// hint is ignored
 			return emplace(std::forward<value_type>(value));
 		}
-		template <typename InputIt>
+		template<typename InputIt>
 		void insert(InputIt first, InputIt last)
 		{
-			static_assert(eds::type::is_iterator_v<InputIt>, "InputIt must be an iterator type");
+			static_assert(eds::type::Constraint<InputIt>(eds::type::is_iterator), "InputIt must be an iterator type");
 
 			container_.insert(container_.end(), first, last);
 			std::sort(container_.begin(), container_.end(), key_comp());
@@ -267,57 +267,63 @@ namespace eds
 		std::vector<Key, Allocator> container_;
 	};
 
-	template <typename Key,
+	template<
+		typename Key,
 		typename Compare = std::less<Key>,
 		typename Allocator = std::allocator<Key>>
-		inline bool operator ==(const FlatSet<Key, Compare, Allocator> &lhs,
+	inline bool operator==(const FlatSet<Key, Compare, Allocator> &lhs,
 			const FlatSet<Key, Compare, Allocator> &rhs)
 	{
 		return std::equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend());
 	}
 
-	template <typename Key,
+	template<
+		typename Key,
 		typename Compare = std::less<Key>,
 		typename Allocator = std::allocator<Key>>
-		inline bool operator !=(const FlatSet<Key, Compare, Allocator> &lhs,
+	inline bool operator!=(const FlatSet<Key, Compare, Allocator> &lhs,
 			const FlatSet<Key, Compare, Allocator> &rhs)
 	{
 		return !(lhs == rhs);
 	}
 
-	template <typename Key,
+	template<
+		typename Key,
 		typename Compare = std::less<Key>,
 		typename Allocator = std::allocator<Key>>
-		inline bool operator <(const FlatSet<Key, Compare, Allocator> &lhs,
+	inline bool operator<(const FlatSet<Key, Compare, Allocator> &lhs,
 			const FlatSet<Key, Compare, Allocator> &rhs)
 	{
 		return std::lexicographical_compare(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend(), Compare{});
 	}
 
-	template <typename Key,
+	template<
+		typename Key,
 		typename Compare = std::less<Key>,
 		typename Allocator = std::allocator<Key>>
-		inline bool operator <=(const FlatSet<Key, Compare, Allocator> &lhs,
+	inline bool operator<=(const FlatSet<Key, Compare, Allocator> &lhs,
 			const FlatSet<Key, Compare, Allocator> &rhs)
 	{
-		return operator==(lhs, rhs) || operator<(lhs, rhs);
+		return !(lhs > rhs);
 	}
 
-	template <typename Key,
+	template<
+		typename Key,
 		typename Compare = std::less<Key>,
 		typename Allocator = std::allocator<Key>>
-		inline bool operator >(const FlatSet<Key, Compare, Allocator> &lhs,
+	inline bool operator>(const FlatSet<Key, Compare, Allocator> &lhs,
 			const FlatSet<Key, Compare, Allocator> &rhs)
 	{
-		return !operator<=(lhs, rhs);
+		return rhs < lhs;
 	}
 
-	template <typename Key,
+	template<
+		typename Key,
 		typename Compare = std::less<Key>,
 		typename Allocator = std::allocator<Key>>
-		inline bool operator >=(const FlatSet<Key, Compare, Allocator> &lhs,
+	inline bool operator>=(const FlatSet<Key, Compare, Allocator> &lhs,
 			const FlatSet<Key, Compare, Allocator> &rhs)
 	{
-		return !operator<(lhs, rhs);
+		return !(lhs < rhs);
 	}
 }
