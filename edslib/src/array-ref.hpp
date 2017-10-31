@@ -41,6 +41,18 @@ namespace eds
 			{
 				Swap(*this, ins);
 			}
+			
+			BasicArrayRef& operator=(const BasicArrayRef& ins) noexcept
+			{
+				data_ = ins.data_;
+				size_ = ins.size_;
+			}
+			BasicArrayRef& operator=(BasicArrayRef&& ins) noexcept
+			{
+				*this = static_cast<const BasicArrayRef&>(ins);
+				ins.data_ = nullptr;
+				ins.size_ = 0;
+			}
 
 			// members
 			//
@@ -74,7 +86,7 @@ namespace eds
 			constexpr BasicArrayRef Slice(int offset, int len) const
 			{
 				assert(offset >= 0 && len > 0);
-				assert(offset + len < size_);
+				assert(offset + len <= size_);
 				return BasicArrayRef{ data_ + offset, len };
 			}
 			constexpr BasicArrayRef TakeFront(int count) const

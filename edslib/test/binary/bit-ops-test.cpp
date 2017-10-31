@@ -24,7 +24,7 @@ TEST_CASE("::bit-ops")
 			auto len = dis_len(gen);
 			v_len.push_back(len);
 
-			uniform_int_distribution<> dis_byte{ 0, 1 << len - 1 };
+			uniform_int_distribution<> dis_byte{ 0, 1 << (len - 1) };
 			auto x = dis_byte(gen);
 			v_data.push_back(x);
 		}

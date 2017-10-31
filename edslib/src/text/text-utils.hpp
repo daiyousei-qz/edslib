@@ -15,7 +15,7 @@ namespace eds::text
 
 	inline bool ConsumeIf(zstring& s, char ch)
 	{
-		assert(*s);
+		assert(ch != '\0');
 
 		if (*s == ch)
 		{
@@ -29,8 +29,7 @@ namespace eds::text
 	// range is inclusive
 	inline bool ConsumeIfRange(zstring& s, int min, int max)
 	{
-		assert(*s);
-		assert(min <= max);
+		assert(min <= max && min > 0);
 
 		if (*s >= min && *s <= max)
 		{
@@ -43,7 +42,6 @@ namespace eds::text
 
 	inline bool ConsumeIfSeq(zstring& s, zstring pred)
 	{
-		assert(*s);
 		assert(*pred);
 
 		auto sp = s;
@@ -62,7 +60,6 @@ namespace eds::text
 
 	inline bool ConsumeIfAny(zstring& s, zstring pred)
 	{
-		assert(*s);
 		assert(*pred);
 
 		for (auto p = pred; *p; ++p)

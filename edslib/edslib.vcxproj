@@ -96,6 +96,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -121,7 +122,6 @@
     <ClInclude Include="src\array-ref.hpp" />
     <ClInclude Include="src\binary\binary.h" />
     <ClInclude Include="src\binary\bit-ops.hpp" />
-    <ClInclude Include="src\lang-helper.h" />
     <ClInclude Include="src\lang-utils.hpp" />
     <ClInclude Include="src\compression\compression.hpp" />
     <ClInclude Include="src\ext\flat-set.hpp" />
