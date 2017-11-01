@@ -1,5 +1,5 @@
 #include "../unittest.h"
-#include "../../src/compression/compression.hpp"
+#include "../../src/compression/compression.h"
 #include <random>
 #include <functional>
 

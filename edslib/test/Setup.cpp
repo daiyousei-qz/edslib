@@ -11,9 +11,9 @@
 #include <cassert>
 #include <algorithm>
 #include <random>
-#include "arena.hpp"
-#include "format.hpp"
-#include "compression.hpp"
+#include "arena.h"
+#include "format.h"
+#include "compression.h"
 
 using namespace std;
 

@@ -1,5 +1,5 @@
 #include "../unittest.h"
-#include "../../src/text/text-utils.hpp"
+#include "../../src/text/text-utils.h"
 
 TEST_CASE("::text")
 {

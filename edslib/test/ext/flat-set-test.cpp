@@ -1,5 +1,5 @@
 #include "../unittest.h"
-#include "../../src/ext/flat-set.hpp"
+#include "../../src/ext/flat-set.h"
 #include <array>
 #include <algorithm>
 

@@ -1,5 +1,5 @@
 #include "unittest.h"
-#include "../src/arena.hpp"
+#include "../src/arena.h"
 
 namespace 
 {

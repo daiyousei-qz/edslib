@@ -6,7 +6,7 @@
 *================================================================================*/
 
 #pragma once
-#include "text-utils.hpp"
+#include "text-utils.h"
 #include <stdexcept>
 #include <functional>
 #include <string>

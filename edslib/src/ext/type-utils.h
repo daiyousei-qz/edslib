@@ -71,7 +71,7 @@ namespace eds::type
 		};
 
 		// a generic type checker that adapt to STL bool_constant interface
-		template <template<typename> typename Pred>
+		template<template<typename> typename Pred>
 		struct GenericTypeChecker : public TypeChecker
 		{
 			template <typename T>
@@ -133,11 +133,52 @@ namespace eds::type
 	// Wrapper for standard type_traits
 	//
 
+	// Primary type categories
+	//
+	static constexpr auto is_void						= generic_check<std::is_void>;
+	static constexpr auto is_null_pointer				= generic_check<std::is_null_pointer>;
+	static constexpr auto is_integral					= generic_check<std::is_integral>;
+	static constexpr auto is_floating_point				= generic_check<std::is_floating_point>;
+	static constexpr auto is_array						= generic_check<std::is_array>;
+	static constexpr auto is_enum						= generic_check<std::is_enum>;
+	static constexpr auto is_union						= generic_check<std::is_union>;
+	static constexpr auto is_class						= generic_check<std::is_class>;
+	static constexpr auto is_function					= generic_check<std::is_function>;
+	static constexpr auto is_pointer					= generic_check<std::is_pointer>;
+	static constexpr auto is_lvalue_reference			= generic_check<std::is_lvalue_reference>;
+	static constexpr auto is_rvalue_reference			= generic_check<std::is_rvalue_reference>;
+	static constexpr auto is_member_object_pointer		= generic_check<std::is_member_object_pointer>;
+	static constexpr auto is_member_function_pointer	= generic_check<std::is_member_function_pointer>;
+
+	// Composite type categories
+	//
+	static constexpr auto is_fundamental				= generic_check<std::is_fundamental>;
+	static constexpr auto is_arithmetic					= generic_check<std::is_arithmetic>;
+	static constexpr auto is_scalar						= generic_check<std::is_scalar>;
+	static constexpr auto is_object						= generic_check<std::is_object>;
+	static constexpr auto is_compound					= generic_check<std::is_compound>;
+	static constexpr auto is_reference					= generic_check<std::is_reference>;
+	static constexpr auto is_member_pointer				= generic_check<std::is_member_pointer>;
+
+	// Type properties
+	//
+	static constexpr auto is_const						= generic_check<std::is_const>;
+	static constexpr auto is_volatile					= generic_check<std::is_volatile>;
+	static constexpr auto is_trivial					= generic_check<std::is_trivial>;
+	static constexpr auto is_trivially_copyable			= generic_check<std::is_trivially_copyable>;
+	static constexpr auto is_standard_layout			= generic_check<std::is_standard_layout>;
+	static constexpr auto is_pod						= generic_check<std::is_pod>;
+	static constexpr auto is_empty						= generic_check<std::is_empty>;
+	static constexpr auto is_polymorphic				= generic_check<std::is_polymorphic>;
+	static constexpr auto is_abstract					= generic_check<std::is_abstract>;
+	static constexpr auto is_final						= generic_check<std::is_final>;
+	static constexpr auto is_signed						= generic_check<std::is_signed>;
+	static constexpr auto is_unsigned					= generic_check<std::is_unsigned>;
+
+	// Type relationships
+ 	//
 	namespace detail
 	{
-		// Type relationships
-		//
-
 		template <typename U>
 		struct SameTo : public TypeChecker
 		{
@@ -188,45 +229,6 @@ namespace eds::type
 			}
 		};
 	}
-
-	// TypeChecker instances
-	//
-
-	static constexpr auto is_void						= generic_check<std::is_void>;
-	static constexpr auto is_null_pointer				= generic_check<std::is_null_pointer>;
-	static constexpr auto is_integral					= generic_check<std::is_integral>;
-	static constexpr auto is_floating_point				= generic_check<std::is_floating_point>;
-	static constexpr auto is_array						= generic_check<std::is_array>;
-	static constexpr auto is_enum						= generic_check<std::is_enum>;
-	static constexpr auto is_union						= generic_check<std::is_union>;
-	static constexpr auto is_class						= generic_check<std::is_class>;
-	static constexpr auto is_function					= generic_check<std::is_function>;
-	static constexpr auto is_pointer					= generic_check<std::is_pointer>;
-	static constexpr auto is_lvalue_reference			= generic_check<std::is_lvalue_reference>;
-	static constexpr auto is_rvalue_reference			= generic_check<std::is_rvalue_reference>;
-	static constexpr auto is_member_object_pointer		= generic_check<std::is_member_object_pointer>;
-	static constexpr auto is_member_function_pointer	= generic_check<std::is_member_function_pointer>;
-
-	static constexpr auto is_fundamental				= generic_check<std::is_fundamental>;
-	static constexpr auto is_arithmetic					= generic_check<std::is_arithmetic>;
-	static constexpr auto is_scalar						= generic_check<std::is_scalar>;
-	static constexpr auto is_object						= generic_check<std::is_object>;
-	static constexpr auto is_compound					= generic_check<std::is_compound>;
-	static constexpr auto is_reference					= generic_check<std::is_reference>;
-	static constexpr auto is_member_pointer				= generic_check<std::is_member_pointer>;
-
-	static constexpr auto is_const						= generic_check<std::is_const>;
-	static constexpr auto is_volatile					= generic_check<std::is_volatile>;
-	static constexpr auto is_trivial					= generic_check<std::is_trivial>;
-	static constexpr auto is_trivially_copyable			= generic_check<std::is_trivially_copyable>;
-	static constexpr auto is_standard_layout			= generic_check<std::is_standard_layout>;
-	static constexpr auto is_pod						= generic_check<std::is_pod>;
-	static constexpr auto is_empty						= generic_check<std::is_empty>;
-	static constexpr auto is_polymorphic				= generic_check<std::is_polymorphic>;
-	static constexpr auto is_abstract					= generic_check<std::is_abstract>;
-	static constexpr auto is_final						= generic_check<std::is_final>;
-	static constexpr auto is_signed						= generic_check<std::is_signed>;
-	static constexpr auto is_unsigned					= generic_check<std::is_unsigned>;
 
 	template <typename U>
 	static constexpr auto same_to						= detail::SameTo<U>();

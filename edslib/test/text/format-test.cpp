@@ -1,5 +1,5 @@
 #include "../unittest.h"
-#include "../../src/text/format.hpp"
+#include "../../src/text/format.h"
 #include <string>
 
 TEST_CASE("format::")

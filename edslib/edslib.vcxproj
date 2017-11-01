@@ -118,16 +118,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="external\catch.hpp" />
-    <ClInclude Include="src\arena.hpp" />
-    <ClInclude Include="src\array-ref.hpp" />
+    <ClInclude Include="src\arena.h" />
+    <ClInclude Include="src\array-ref.h" />
     <ClInclude Include="src\binary\binary.h" />
-    <ClInclude Include="src\binary\bit-ops.hpp" />
-    <ClInclude Include="src\lang-utils.hpp" />
-    <ClInclude Include="src\compression\compression.hpp" />
-    <ClInclude Include="src\ext\flat-set.hpp" />
-    <ClInclude Include="src\text\text-utils.hpp" />
-    <ClInclude Include="src\ext\type-utils.hpp" />
-    <ClInclude Include="src\text\format.hpp" />
+    <ClInclude Include="src\binary\bit-ops.h" />
+    <ClInclude Include="src\container\heap-array.h" />
+    <ClInclude Include="src\lang-utils.h" />
+    <ClInclude Include="src\compression\compression.h" />
+    <ClInclude Include="src\ext\flat-set.h" />
+    <ClInclude Include="src\text\text-utils.h" />
+    <ClInclude Include="src\ext\type-utils.h" />
+    <ClInclude Include="src\text\format.h" />
     <ClInclude Include="test\unittest.h" />
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +136,7 @@
     <ClCompile Include="test\array-ref-test.cpp" />
     <ClCompile Include="test\binary\bit-ops-test.cpp" />
     <ClCompile Include="test\compression\compression-test.cpp" />
+    <ClCompile Include="test\container\heap-array-test.cpp" />
     <ClCompile Include="test\ext\flat-set-test.cpp" />
     <ClCompile Include="test\ext\type-utils-test.cpp" />
     <ClCompile Include="test\Setup.cpp" />

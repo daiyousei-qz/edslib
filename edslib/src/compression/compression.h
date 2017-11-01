@@ -1,7 +1,7 @@
 #pragma once
-#include "../arena.hpp"
-#include "../binary/bit-ops.hpp"
-#include "../ext/type-utils.hpp"
+#include "../arena.h"
+#include "../binary/bit-ops.h"
+#include "../ext/type-utils.h"
 #include <vector>
 
 // LWZ implementation

@@ -6,7 +6,7 @@
 *================================================================================*/
 
 #pragma once
-#include "lang-utils.hpp"
+#include "lang-utils.h"
 #include <deque>
 #include <cassert>
 #include <type_traits>
@@ -39,17 +39,16 @@ namespace eds
 			void(*cleaner)(void*);
 		};
 
-		struct CtorDummy { };
-
 		static constexpr size_t kDefaultAlignment = alignof(nullptr_t);
 		static constexpr size_t kFailureToleranceCount = 8;
 		static constexpr size_t kFailureCounterThreshold = 1024;
 		static constexpr size_t kBigChunkThreshold = 2048;
 		static constexpr size_t kDefaultPoolBlockSize = 4096 - sizeof(Block);
-		static constexpr float kPoolBlockGrowthFactor = 1.5;
+		static constexpr size_t kMaximumPoolBlockSize = 16 * 4096 - sizeof(Block);
+		static constexpr float kPoolBlockGrowthFactor = 2;
 
 	public:
-		Arena(CtorDummy = {}) { }
+		Arena() { }
 
 		~Arena()
 		{
@@ -138,8 +137,9 @@ namespace eds
 
 		Block* NewPoolBlock()
 		{
-			auto block = NewBlock(next_block_sz_);
-			next_block_sz_ *= kPoolBlockGrowthFactor;
+			auto size = next_block_sz_;
+			auto block = NewBlock(size);
+			next_block_sz_ = std::min(static_cast<size_t>(kPoolBlockGrowthFactor*size), kMaximumPoolBlockSize);
 
 			return block;
 		}

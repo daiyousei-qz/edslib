@@ -6,7 +6,7 @@
 *================================================================================*/
 
 #pragma once
-#include "type-utils.hpp"
+#include "type-utils.h"
 #include <cstddef>
 #include <vector>
 #include <algorithm>
@@ -17,8 +17,8 @@ namespace eds
 	// FlatSet
 	//
 	template<typename Key,
-			  typename Compare = std::less<Key>,
-			  typename Allocator = std::allocator<Key>>
+			 typename Compare = std::less<Key>,
+			 typename Allocator = std::allocator<Key>>
 	class FlatSet
 	{
 		static_assert(std::is_move_constructible_v<Key>, "T in FlatSet<T> must be move constructible");
