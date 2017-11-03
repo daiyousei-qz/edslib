@@ -1,5 +1,5 @@
 #include "../unittest.h"
-#include "../../src/container/heap-array.h"
+#include "container/heap-array.h"
 
 using namespace eds::container;
 

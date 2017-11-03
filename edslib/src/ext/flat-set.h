@@ -232,15 +232,23 @@ namespace eds
 		// lookup
 		size_type count(const Key& value) const
 		{
-			return std::find(container_.begin(), container_.end(), value) == end() ? 0 : 1;
+			return find(value) == end() ? 0 : 1;
 		}
 		iterator find(const Key& value)
 		{
-			return std::find(container_.begin(), container_.end(), value);
+			auto it = lower_bound(value);
+
+			// if value < *it, NOTE *it >= value, then not found
+			return it != end() && key_comp()(value, *it)
+				? end() : it;
 		}
 		const_iterator find(const Key& value) const
 		{
-			return std::find(container_.cbegin(), container_.cend(), value);
+			auto it = lower_bound(value);
+
+			// if value < *it, NOTE *it >= value, then not found
+			return it != end() && key_comp()(value, *it)
+				? end() : it;
 		}
 		iterator lower_bound(const Key& value)
 		{

@@ -1,10 +1,10 @@
 #include "../unittest.h"
-#include "../../src/text/text-utils.h"
+#include "text/text-utils.h"
+
+using namespace eds::text;
 
 TEST_CASE("::text")
 {
-	using namespace eds::text;
-
 	SECTION("Consume")
 	{
 		zstring x = "hello world";

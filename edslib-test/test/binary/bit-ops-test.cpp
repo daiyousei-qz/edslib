@@ -1,5 +1,5 @@
 #include "../unittest.h"
-#include "../../src/binary/bit-ops.h"
+#include "binary/bit-ops.h"
 #include <random>
 #include <vector>
 

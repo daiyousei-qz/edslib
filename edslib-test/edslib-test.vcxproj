@@ -20,13 +20,13 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{87E3CADE-8749-4988-B3E6-0C9F07E58828}</ProjectGuid>
-    <RootNamespace>edslib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <ProjectGuid>{948765C6-0451-40AB-A7EE-3A3B94BBC855}</ProjectGuid>
+    <RootNamespace>edslibtest</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -75,18 +75,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\sunks\Documents\Projects\edslib\edslib\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -96,7 +93,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -117,17 +113,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\arena.h" />
-    <ClInclude Include="src\array-ref.h" />
-    <ClInclude Include="src\binary\binary.h" />
-    <ClInclude Include="src\binary\bit-ops.h" />
-    <ClInclude Include="src\container\heap-array.h" />
-    <ClInclude Include="src\lang-utils.h" />
-    <ClInclude Include="src\compression\compression.h" />
-    <ClInclude Include="src\ext\flat-set.h" />
-    <ClInclude Include="src\text\text-utils.h" />
-    <ClInclude Include="src\ext\type-utils.h" />
-    <ClInclude Include="src\text\format.h" />
+    <ClCompile Include="test\arena-test.cpp" />
+    <ClCompile Include="test\array-ref-test.cpp" />
+    <ClCompile Include="test\binary\bit-ops-test.cpp" />
+    <ClCompile Include="test\compression\compression-test.cpp" />
+    <ClCompile Include="test\container\heap-array-test.cpp" />
+    <ClCompile Include="test\ext\flat-set-test.cpp" />
+    <ClCompile Include="test\ext\type-utils-test.cpp" />
+    <ClCompile Include="test\Setup.cpp" />
+    <ClCompile Include="test\text\format-test.cpp" />
+    <ClCompile Include="test\text\text-utils-test.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="external\catch.hpp" />
+    <ClInclude Include="test\unittest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

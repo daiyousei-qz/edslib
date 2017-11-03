@@ -1,11 +1,11 @@
 #include "../unittest.h"
-#include "../../src/text/format.h"
+#include "text/format.h"
 #include <string>
+
+using namespace eds::text;
 
 TEST_CASE("format::")
 {
-	using namespace eds::text;
-
 	{
 		std::string expected = "a(1,2.2,3,\"4\")";
 		std::string yield = Format("a({},{},{},{})", 1, 2.2, '3', "\"4\"");
