@@ -171,7 +171,9 @@ namespace eds
 			// TODO: performance warning
 			Key value = Key(std::forward<TArgs>(args)...);
 			iterator lb = lower_bound(value);
-			if (lb != container_.end() && *lb == value)
+
+			// NOTE *lb == value <=> !(*lb < value) && !(value < *lb)
+			if (lb != container_.end() && !key_comp()(value, *lb))
 			{
 				return std::make_pair(lb, false);
 			}
@@ -204,11 +206,7 @@ namespace eds
 		{
 			static_assert(eds::type::Constraint<InputIt>(eds::type::is_iterator), "InputIt must be an iterator type");
 
-			container_.insert(container_.end(), first, last);
-			std::sort(container_.begin(), container_.end(), key_comp());
-
-			auto correct_end = std::unique(container_.begin(), container_.end());
-			container_.erase(correct_end, container_.end());
+			std::for_each(first, last, [&](const auto& elem) { insert(elem); });
 		}
 		void insert(std::initializer_list<value_type> ilist)
 		{

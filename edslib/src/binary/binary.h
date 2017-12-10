@@ -26,6 +26,12 @@ namespace eds::binary
 			data_.clear();
 		}
 
+		// count of bytes already written
+		int Count()
+		{
+			return data_.size();
+		}
+		// underlying buffer of the writer object
 		const auto& Buffer()
 		{
 			return data_;

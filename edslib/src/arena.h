@@ -9,6 +9,7 @@
 #include "lang-utils.h"
 #include <deque>
 #include <cassert>
+#include <algorithm>
 #include <type_traits>
 #include <memory>
 

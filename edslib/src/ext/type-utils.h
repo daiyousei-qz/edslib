@@ -346,8 +346,8 @@ namespace eds::type
 	static constexpr auto is_pointer_of				= detail::IsPointerOf<U>{};
 }
 
-// TODO: have no idea should make this be at global scope or not
-//       as SFINAE filters non-type-checkers
+// TODO: have no idea should make this be in global scope or not
+//       note SFINAE filters non-type-checkers anyway, it won't interfere
 using ::eds::type::operator&&;
 using ::eds::type::operator||;
 using ::eds::type::operator!;

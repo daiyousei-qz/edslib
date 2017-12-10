@@ -114,7 +114,7 @@ namespace eds::container
 		{
 			assert(len >= 0);
 
-			auto new_size = len;
+			auto new_size = 0;
 			T* new_ptr = nullptr;
 
 			if (len > 0)
@@ -124,6 +124,7 @@ namespace eds::container
 				try
 				{
 					init(tmp);
+					new_size = len;
 					new_ptr = tmp;
 				}
 				catch (...)
