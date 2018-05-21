@@ -77,7 +77,7 @@ namespace eds::type
 			template <typename T>
 			static constexpr bool Evaluate()
 			{
-				static_assert(std::is_same_v<Pred<T>::value, bool>);
+				static_assert(std::is_same_v<Pred<T>::value_type, bool>);
 
 				return Pred<T>::value;
 			}

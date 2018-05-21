@@ -69,6 +69,15 @@ namespace eds::container
 			return ptr_[index];
 		}
 
+		ArrayRef<T> Ref()
+		{
+			return ArrayRef<T>{ prt_, size_ };
+		}
+		ArrayView<T> View() const
+		{
+			return ArrayView<T>{ ptr_, size_ };
+		}
+
 		// discard the current instance and initialize a new one
 		void Initialize(int len)
 		{

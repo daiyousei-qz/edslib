@@ -56,7 +56,7 @@ namespace eds
 
 			// members
 			//
-			PointerType Data() const noexcept { return data_; }
+			PointerType Value() const noexcept { return data_; }
 			int Length() const noexcept { return size_; }
 			bool Empty() const noexcept { return size_ == 0; }
 

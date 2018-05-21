@@ -79,7 +79,7 @@ namespace eds
 	class BitEmitter
 	{
 	public:
-		const auto& Data() const
+		const auto& Value() const
 		{
 			return data_;
 		}
