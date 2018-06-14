@@ -179,33 +179,33 @@ namespace eds::type
  	//
 	namespace detail
 	{
-		template <typename U>
-		struct SameTo : public TypeChecker
+		template <typename... Us>
+		struct SameToAny : public TypeChecker
 		{
 			template <typename T>
 			static constexpr bool Evaluate()
 			{
-				return std::is_same_v<U, T>;
+				return std::conjunction_v<std::is_same<T, Us>...>;
 			}
 		};
 
-		template <typename Base>
-		struct DeriveFrom : public TypeChecker
+		template <typename... BasePack>
+		struct DeriveFromAny : public TypeChecker
 		{
 			template <typename T>
 			static constexpr bool Evaluate()
 			{
-				return std::is_base_of_v<Base, T>;
+				return std::conjunction_v<std::is_base_of<BasePack, T>...>;
 			}
 		};
 
-		template <typename U>
-		struct ConvertibleTo : public TypeChecker
+		template <typename... Us>
+		struct ConvertibleToAny : public TypeChecker
 		{
 			template <typename T>
 			static constexpr bool Evaluate()
 			{
-				return std::is_convertible_v<T, U>;
+				return std::conjunction_v<std::is_convertible<T, Us>...>;
 			}
 		};
 
@@ -231,11 +231,17 @@ namespace eds::type
 	}
 
 	template <typename U>
-	static constexpr auto same_to						= detail::SameTo<U>();
+	static constexpr auto same_to						= detail::SameToAny<U>();
+	template <typename... Us>
+	static constexpr auto same_to_any					= detail::SameToAny<Us...>();
 	template <typename Base>
-	static constexpr auto derive_from					= detail::DeriveFrom<Base>();
+	static constexpr auto derive_from					= detail::DeriveFromAny<Base>();
+	template <typename... BasePack>
+	static constexpr auto same_to_any					= detail::DeriveFromAny<BasePack...>();
 	template <typename U>
-	static constexpr auto convertible_to				= detail::ConvertibleTo<U>();
+	static constexpr auto convertible_to				= detail::ConvertibleToAny<U>();
+	template <typename... Us>
+	static constexpr auto convertible_to_any			= detail::ConvertibleToAny<Us...>();
 	template <typename ...TArgs>
 	static constexpr auto invocable						= detail::Invocable<TArgs...>();
 	template <typename ...TArgs>
