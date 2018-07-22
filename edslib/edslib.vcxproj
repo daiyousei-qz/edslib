@@ -123,8 +123,9 @@
     <ClInclude Include="src\binary\bit-ops.h" />
     <ClInclude Include="src\container\heap-array.h" />
     <ClInclude Include="src\lang-utils.h" />
-    <ClInclude Include="src\compression\compression.h" />
-    <ClInclude Include="src\ext\flat-set.h" />
+    <ClInclude Include="src\compression\lzw.h" />
+    <ClInclude Include="src\container\flat-set.h" />
+    <ClInclude Include="src\ptr-arithmetic.h" />
     <ClInclude Include="src\text\text-utils.h" />
     <ClInclude Include="src\ext\type-utils.h" />
     <ClInclude Include="src\text\format.h" />

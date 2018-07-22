@@ -353,7 +353,7 @@ namespace eds::type
 }
 
 // TODO: have no idea should make this be in global scope or not
-//       note SFINAE filters non-type-checkers anyway, it won't interfere
+//       note SFINAE filters non-type-checkers anyway, it won't interfere anything
 using ::eds::type::operator&&;
 using ::eds::type::operator||;
 using ::eds::type::operator!;

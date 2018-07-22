@@ -14,14 +14,14 @@ namespace eds::compression
 		static constexpr int kMaxCodeWidth = 16;
 		static constexpr int kCodeWidthIncrementalStep = 1;
 
-		struct TierNode
+		struct LzwTrieNode
 		{
 			uint32_t code;
 			int length;
 
 			uint8_t value;
-			TierNode* parent;
-			TierNode* children[256];
+			LzwTrieNode* parent;
+			LzwTrieNode* children[256];
 		};
 
 		class LzwDictionary
@@ -38,7 +38,7 @@ namespace eds::compression
 			int CodeWidth() { return code_width_; }
 			bool AllowGrowth() { return next_code_ < (1 << kMaxCodeWidth); }
 
-			TierNode* LookupRoot(uint8_t b)
+			LzwTrieNode* LookupRoot(uint8_t b)
 			{
 				return root_nodes_[b];
 			}
@@ -51,15 +51,15 @@ namespace eds::compression
 				}
 			}
 
-			TierNode* UpdateNode(TierNode* prefix, uint8_t b)
+			LzwTrieNode* UpdateNode(LzwTrieNode* prefix, uint8_t b)
 			{
 				return (prefix->children[b] = NewNode(prefix, b));
 			}
 
 		private:
-			TierNode* NewNode(TierNode* prefix, uint8_t value)
+			LzwTrieNode* NewNode(LzwTrieNode* prefix, uint8_t value)
 			{
-				auto node = arena_.Construct<TierNode>();
+				auto node = arena_.Construct<LzwTrieNode>();
 				node->code = next_code_++;
 				node->length = prefix == nullptr ? 1 : prefix->length + 1;
 				node->value = value;
@@ -70,14 +70,14 @@ namespace eds::compression
 			}
 
 			Arena arena_;
-			TierNode* root_nodes_[256];
+			LzwTrieNode* root_nodes_[256];
 
 			int code_width_ = kMinCodeWidth;
 			uint32_t next_code_ = 0;
 		};
 
 		// expands node into the sequence it encodes
-		inline void ExpandDecodedSeq(std::vector<uint8_t>& output, TierNode* node)
+		inline void ExpandDecodedSeq(std::vector<uint8_t>& output, LzwTrieNode* node)
 		{
 			output.resize(output.size() + node->length);
 
@@ -91,7 +91,7 @@ namespace eds::compression
 				++it;
 			}
 		}
-	}
+	} // namespace detail
 
 	template<typename TIter>
 	inline auto EncodeLzw(TIter begin, TIter end)
@@ -135,7 +135,7 @@ namespace eds::compression
 		using namespace eds::compression::detail;
 
 		LzwDictionary dict;
-		std::vector<TierNode*> code_lookup;
+		std::vector<LzwTrieNode*> code_lookup;
 		for (auto i = 0; i < 256; ++i)
 		{
 			code_lookup.push_back(dict.LookupRoot(i));
@@ -143,7 +143,7 @@ namespace eds::compression
 
 		BitReader<TIter> reader{ begin, end };
 		vector<uint8_t> result;
-		TierNode* last_seq_tail = nullptr;
+		LzwTrieNode* last_seq_tail = nullptr;
 		while (reader.RemainingSize() >= dict.CodeWidth())
 		{
 			// load next code
