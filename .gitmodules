@@ -1,0 +1,3 @@
+[submodule "Reference/Catch"]
+	path = Reference/Catch
+	url = https://github.com/catchorg/Catch2
