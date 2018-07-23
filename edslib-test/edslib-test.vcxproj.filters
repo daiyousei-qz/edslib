@@ -2,18 +2,14 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="test\binary\bit-ops-test.cpp" />
-    <ClCompile Include="test\compression\compression-test.cpp" />
     <ClCompile Include="test\container\heap-array-test.cpp" />
-    <ClCompile Include="test\ext\flat-set-test.cpp" />
-    <ClCompile Include="test\ext\type-utils-test.cpp" />
     <ClCompile Include="test\text\format-test.cpp" />
     <ClCompile Include="test\text\text-utils-test.cpp" />
-    <ClCompile Include="test\arena-test.cpp" />
     <ClCompile Include="test\array-ref-test.cpp" />
     <ClCompile Include="test\Setup.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="test\unittest.h" />
-    <ClInclude Include="external\catch.hpp" />
+    <ClCompile Include="test\memory\arena-test.cpp" />
+    <ClCompile Include="test\container\flat-set-test.cpp" />
+    <ClCompile Include="test\compression\lzw-test.cpp" />
+    <ClCompile Include="test\type-utils-test.cpp" />
   </ItemGroup>
 </Project>

@@ -4,73 +4,74 @@
 
 namespace eds::text
 {
-	using zstring = const char*;
+    using zstring = const char*;
 
-	inline char Consume(zstring& s)
-	{
-		assert(*s);
+    inline char Consume(zstring& s)
+    {
+        assert(*s);
 
-		return *(s++);
-	}
+        return *(s++);
+    }
 
-	inline bool ConsumeIf(zstring& s, char ch)
-	{
-		assert(ch != '\0');
+    inline bool ConsumeIf(zstring& s, char ch)
+    {
+        assert(ch != '\0');
 
-		if (*s == ch)
-		{
-			++s;
-			return true;
-		}
+        if (*s == ch)
+        {
+            ++s;
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	// range is inclusive
-	inline bool ConsumeIfRange(zstring& s, int min, int max)
-	{
-		assert(min <= max && min > 0);
+    // range is inclusive
+    inline bool ConsumeIfRange(zstring& s, int min, int max)
+    {
+        assert(min <= max && min > 0);
 
-		if (*s >= min && *s <= max)
-		{
-			++s;
-			return true;
-		}
+        if (*s >= min && *s <= max)
+        {
+            ++s;
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	inline bool ConsumeIfSeq(zstring& s, zstring pred)
-	{
-		assert(*pred);
+    inline bool ConsumeIfSeq(zstring& s, zstring pred)
+    {
+        assert(*pred);
 
-		auto sp = s;
-		auto pp = pred;
-		while (*pp)
-		{
-			if (*pp != *sp) return false;
+        auto sp = s;
+        auto pp = pred;
+        while (*pp)
+        {
+            if (*pp != *sp)
+                return false;
 
-			++sp;
-			++pp;
-		}
+            ++sp;
+            ++pp;
+        }
 
-		s = sp;
-		return true;
-	}
+        s = sp;
+        return true;
+    }
 
-	inline bool ConsumeIfAny(zstring& s, zstring pred)
-	{
-		assert(*pred);
+    inline bool ConsumeIfAny(zstring& s, zstring pred)
+    {
+        assert(*pred);
 
-		for (auto p = pred; *p; ++p)
-		{
-			if (*s == *p)
-			{
-				++s;
-				return true;
-			}
-		}
+        for (auto p = pred; *p; ++p)
+        {
+            if (*s == *p)
+            {
+                ++s;
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

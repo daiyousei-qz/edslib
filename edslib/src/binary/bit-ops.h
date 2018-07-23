@@ -1,5 +1,5 @@
 #pragma once
-#include "../ext/type-utils.h"
+#include "../type-utils.h"
 #include <cstddef>
 #include <cassert>
 #include <algorithm>
@@ -8,123 +8,122 @@
 // Bit operations
 namespace eds
 {
-	template<typename TIter>
-	class BitReader
-	{
-		static_assert(type::Constraint<TIter>(type::is_iterator_of<uint8_t>), "TIter must be an iterator type of uint8_t");
+    template <typename TIter>
+    class BitReader
+    {
+        static_assert(type::Constraint<TIter>(type::is_iterator_of<uint8_t>), "TIter must be an iterator type of uint8_t");
 
-	public:
-		BitReader(TIter begin, TIter end)
-			: begin_(begin), end_(end), cursor_(begin) { }
+    public:
+        BitReader(TIter begin, TIter end)
+            : begin_(begin), end_(end), cursor_(begin) {}
 
-		bool Exhausted() const { return cursor_ == end_; }
+        bool Exhausted() const { return cursor_ == end_; }
 
-		int Offset() const { return offset_; }
-		int RemainingSize() const { return std::distance(cursor_, end_) * 8 - offset_; }
+        int Offset() const { return offset_; }
+        int RemainingSize() const { return std::distance(cursor_, end_) * 8 - offset_; }
 
-		void Reset()
-		{
-			offset_ = 0;
-			cursor_ = begin_;
-		}
+        void Reset()
+        {
+            offset_ = 0;
+            cursor_ = begin_;
+        }
 
-		uint32_t Read(int len)
-		{
-			assert(len > 0 && len <= 32);
+        uint32_t Read(int len)
+        {
+            assert(len > 0 && len <= 32);
 
-			uint32_t result = 0;
-			while (len != 0)
-			{
-				auto x = std::min(len, 8 - offset_);
+            uint32_t result = 0;
+            while (len != 0)
+            {
+                auto x = std::min(len, 8 - offset_);
 
-				len -= x;
-				result <<= x;
-				result |= ReadInternal(x);
-			}
+                len -= x;
+                result <<= x;
+                result |= ReadInternal(x);
+            }
 
-			return result;
-		}
+            return result;
+        }
 
-	private:
-		// read a sequence of bits from the current byte
-		uint32_t ReadInternal(int len)
-		{
-			using namespace std;
+    private:
+        // read a sequence of bits from the current byte
+        uint32_t ReadInternal(int len)
+        {
+            using namespace std;
 
-			static constexpr uint8_t bitmasks[] = {
-				/*dummy*/0, 0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3F, 0x7F, 0xFF
-			};
+            static constexpr uint8_t bitmasks[] = {
+                /*dummy*/ 0, 0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3F, 0x7F, 0xFF};
 
-			auto data = *cursor_;
-			data >>= 8 - len - offset_;
-			data &= bitmasks[len];
-			
-			offset_ += len;
-			if (offset_ == 8)
-			{
-				++cursor_;
-				offset_ = 0;
-			}
+            auto data = *cursor_;
+            data >>= 8 - len - offset_;
+            data &= bitmasks[len];
 
-			return data;
-		}
+            offset_ += len;
+            if (offset_ == 8)
+            {
+                ++cursor_;
+                offset_ = 0;
+            }
 
-		TIter begin_;
-		TIter end_;
+            return data;
+        }
 
-		int offset_ = 0;
-		TIter cursor_;
-	};
+        TIter begin_;
+        TIter end_;
 
-	class BitEmitter
-	{
-	public:
-		const auto& Value() const
-		{
-			return data_;
-		}
+        int offset_ = 0;
+        TIter cursor_;
+    };
 
-		auto Export()
-		{
-			return std::move(data_);
-		}
+    class BitEmitter
+    {
+    public:
+        const auto& Value() const
+        {
+            return data_;
+        }
 
-		void Reset()
-		{
-			offset_ = 0;
-			data_.clear();
-		}
+        auto Export()
+        {
+            return std::move(data_);
+        }
 
-		void Write(uint32_t data, int len)
-		{
-			assert(len > 0 && len <= 32);
+        void Reset()
+        {
+            offset_ = 0;
+            data_.clear();
+        }
 
-			while (len != 0)
-			{
-				data &= ~0 >> (32 - len);
+        void Write(uint32_t data, int len)
+        {
+            assert(len > 0 && len <= 32);
 
-				auto x = std::min(8 - offset_, len);
-				auto t = data >> (len - x);
+            while (len != 0)
+            {
+                data &= ~0 >> (32 - len);
 
-				WriteInternal(t, x);
-				len -= x;
-			}
-		}
+                auto x = std::min(8 - offset_, len);
+                auto t = data >> (len - x);
 
-	private:
-		void WriteInternal(uint8_t data, int len)
-		{
-			if (data_.empty() || offset_ == 8)
-			{
-				data_.push_back(0);
-				offset_ = 0;
-			}
+                WriteInternal(t, x);
+                len -= x;
+            }
+        }
 
-			data_.back() |= data << 8 - offset_ - len;
-			offset_ += len;
-		}
+    private:
+        void WriteInternal(uint8_t data, int len)
+        {
+            if (data_.empty() || offset_ == 8)
+            {
+                data_.push_back(0);
+                offset_ = 0;
+            }
 
-		int offset_ = 0;
-		std::vector<uint8_t> data_;
-	};
+            data_.back() |= data << 8 - offset_ - len;
+            offset_ += len;
+        }
+
+        int offset_ = 0;
+        std::vector<uint8_t> data_;
+    };
 }

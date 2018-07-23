@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{87E3CADE-8749-4988-B3E6-0C9F07E58828}</ProjectGuid>
     <RootNamespace>edslib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -76,10 +76,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -117,18 +121,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\arena.h" />
     <ClInclude Include="src\array-ref.h" />
     <ClInclude Include="src\binary\binary.h" />
     <ClInclude Include="src\binary\bit-ops.h" />
+    <ClInclude Include="src\binary\data-blob.h" />
     <ClInclude Include="src\container\heap-array.h" />
     <ClInclude Include="src\lang-utils.h" />
     <ClInclude Include="src\compression\lzw.h" />
     <ClInclude Include="src\container\flat-set.h" />
+    <ClInclude Include="src\memory\arena.h" />
     <ClInclude Include="src\ptr-arithmetic.h" />
     <ClInclude Include="src\text\text-utils.h" />
-    <ClInclude Include="src\ext\type-utils.h" />
     <ClInclude Include="src\text\format.h" />
+    <ClInclude Include="src\type-utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

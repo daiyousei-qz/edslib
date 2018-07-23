@@ -1,2 +1,2 @@
-#include "unittest.h"
+#include "catch.hpp"
 #include "array-ref.h"

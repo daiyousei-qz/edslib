@@ -1,4 +1,4 @@
-#include "../unittest.h"
+#include "catch.hpp"
 #include "text/text-utils.h"
 
 using namespace eds::text;
