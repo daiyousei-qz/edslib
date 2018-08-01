@@ -45,7 +45,7 @@ namespace eds::compression
 
             void ReserveWidth()
             {
-                if (next_code_ >= (1 << code_width_) && AllowGrowth())
+                if (next_code_ >= (1U << code_width_) && AllowGrowth())
                 {
                     code_width_ += kCodeWidthIncrementalStep;
                 }

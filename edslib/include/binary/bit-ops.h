@@ -119,7 +119,7 @@ namespace eds
                 offset_ = 0;
             }
 
-            data_.back() |= data << 8 - offset_ - len;
+            data_.back() |= data << (8 - offset_ - len);
             offset_ += len;
         }
 

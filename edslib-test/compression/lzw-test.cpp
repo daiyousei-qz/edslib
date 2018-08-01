@@ -13,7 +13,7 @@ TEST_CASE("::compression")
 
     random_device rd;
     default_random_engine gen{rd()};
-    normal_distribution<> dis_len{1, 255};
+    uniform_int_distribution<> dis_len{0, 255};
 
     for (int i = 0; i < kTestEpoch; ++i)
     {
