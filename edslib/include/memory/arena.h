@@ -16,74 +16,110 @@
 
 namespace eds
 {
-    class Arena final : NonCopyable, NonMovable
+	constexpr size_t kDefaultWorkspaceSize = 4096;
+
+    template <size_t BufferSize = kDefaultWorkspaceSize>
+    class StackWorkspaceMemoryProvider final : NonCopyable, NonMovable
     {
-    private:
-        struct Block
-        {
-            Block* next;
-            // size of the block
-            size_t size;
-            // avalible space offset
-            size_t offset;
-            // counter of allocation failure on this block
-            size_t counter;
-
-            char* DataAddress()
-            {
-                return reinterpret_cast<char*>(this + 1);
-            }
-        };
-
-        struct DestructionHandle
-        {
-            void* pointer;
-            void (*cleaner)(void*);
-        };
-
-        static constexpr size_t kDefaultAlignment        = alignof(nullptr_t);
-        static constexpr size_t kFailureToleranceCount   = 8;
-        static constexpr size_t kFailureCounterThreshold = 1024;
-        static constexpr size_t kBigChunkThreshold       = 2048;
-        static constexpr size_t kDefaultPoolBlockSize    = 4096 - sizeof(Block);
-        static constexpr size_t kMaximumPoolBlockSize    = 16 * 4096 - sizeof(Block);
-        static constexpr float kPoolBlockGrowthFactor    = 2;
-
     public:
-        Arena() {}
+        StackWorkspaceMemoryProvider() {}
+        StackWorkspaceMemoryProvider(size_t sz) {}
 
-        ~Arena()
+        void* Allocate(size_t sz) noexcept
         {
-            for (auto handle : dtors_)
+            if (offset_ + sz > BufferSize)
             {
-                handle.cleaner(handle.pointer);
+                return nullptr;
             }
 
-            FreeBlocks(pooled_head_);
-            FreeBlocks(big_node_);
+            void* result = &buffer_[offset_];
+            offset_ += sz;
+
+            return result;
         }
 
-        using Ptr       = std::unique_ptr<Arena>;
-        using SharedPtr = std::shared_ptr<Arena>;
-
-        static Arena::Ptr Create()
+        void Clear() noexcept
         {
-            return std::make_unique<Arena>();
+            offset_ = 0;
         }
 
-        static Arena::SharedPtr CreateShared()
+        size_t GetByteAllocated() const noexcept
         {
-            return std::make_shared<Arena>();
+            return BufferSize;
+        }
+
+        size_t GetByteUsed() const noexcept
+        {
+            return offset_;
+        }
+
+    private:
+        uint8_t buffer_[BufferSize];
+
+        size_t offset_ = 0;
+    };
+
+    class HeapWorkspaceMemoryProvider final : NonCopyable, NonMovable
+    {
+    public:
+        HeapWorkspaceMemoryProvider() : HeapWorkspaceMemoryProvider(kDefaultWorkspaceSize) {}
+        HeapWorkspaceMemoryProvider(size_t sz)
+        {
+            buffer_size_ = sz;
+            buffer_      = std::make_unique<uint8_t[]>(sz);
+
+            offset_ = 0;
+        }
+
+        void* Allocate(size_t sz) noexcept
+        {
+            if (offset_ + sz > buffer_size_)
+            {
+                return nullptr;
+            }
+
+            void* result = &buffer_[offset_];
+            offset_ += sz;
+
+            return result;
+        }
+
+        void Clear() noexcept
+        {
+            offset_ = 0;
+        }
+
+        size_t GetByteAllocated() const noexcept
+        {
+            return buffer_size_;
+        }
+
+        size_t GetByteUsed() const noexcept
+        {
+            return offset_;
+        }
+
+    private:
+        size_t buffer_size_;
+        std::unique_ptr<uint8_t[]> buffer_;
+
+        size_t offset_;
+    };
+
+    class HeapGrowableMemoryProvider final : NonCopyable, NonMovable
+    {
+    public:
+        HeapGrowableMemoryProvider() {}
+        HeapGrowableMemoryProvider(size_t sz)
+            : next_block_sz_(sz) {}
+
+        ~HeapGrowableMemoryProvider()
+        {
+            Clear();
         }
 
         void* Allocate(size_t sz)
         {
-            // ensure aligned
-            if (sz % kDefaultAlignment)
-            {
-                sz += kDefaultAlignment - sz % kDefaultAlignment;
-            }
-
             if (sz > kBigChunkThreshold)
             {
                 // big chunk of memory should be allocated directly from allocater
@@ -96,31 +132,50 @@ namespace eds
             }
         }
 
-        template <typename T, typename... TArgs>
-        T* Construct(TArgs&&... args)
+        void Clear() noexcept
         {
-            auto ptr = Allocate(sizeof(T));
-            new (ptr) T(std::forward<TArgs>(args)...);
+            FreeBlocks(pooled_head_);
+            FreeBlocks(big_node_);
 
-            if constexpr (!std::is_trivially_destructible_v<T>)
-            {
-                dtors_.push_back({ptr, [](void* p) { reinterpret_cast<T*>(p)->~T(); }});
-            }
-
-            return reinterpret_cast<T*>(ptr);
+            pooled_head_    = nullptr;
+            pooled_current_ = nullptr;
+            big_node_       = nullptr;
         }
 
-        size_t GetByteAllocated() const
+        size_t GetByteAllocated() const noexcept
         {
             return CalculateUsage(pooled_head_, false) + CalculateUsage(big_node_, false);
         }
 
-        size_t GetByteUsed() const
+        size_t GetByteUsed() const noexcept
         {
             return CalculateUsage(pooled_head_, true) + CalculateUsage(big_node_, true);
         }
 
     private:
+        struct Block
+        {
+            Block* next;
+            // size of the block
+            size_t size;
+            // avalible space offset
+            size_t offset;
+            // counter of allocation failure on this block
+            size_t counter;
+
+            uint8_t* DataAddress()
+            {
+                return reinterpret_cast<uint8_t*>(this + 1);
+            }
+        };
+
+        static constexpr size_t kFailureToleranceCount   = 8;
+        static constexpr size_t kFailureCounterThreshold = 1024;
+        static constexpr size_t kBigChunkThreshold       = 2048;
+        static constexpr size_t kDefaultPoolBlockSize    = 4096 - sizeof(Block);
+        static constexpr size_t kMaximumPoolBlockSize    = 16 * 4096 - sizeof(Block);
+        static constexpr float kPoolBlockGrowthFactor    = 2;
+
         Block* NewBlock(size_t capacity)
         {
             // allocate memory
@@ -138,9 +193,10 @@ namespace eds
 
         Block* NewPoolBlock()
         {
-            auto size      = next_block_sz_;
-            auto block     = NewBlock(size);
-            next_block_sz_ = std::min(static_cast<size_t>(kPoolBlockGrowthFactor * size), kMaximumPoolBlockSize);
+            auto size  = next_block_sz_;
+            auto block = NewBlock(size);
+            next_block_sz_ =
+                std::min(static_cast<size_t>(kPoolBlockGrowthFactor * size), kMaximumPoolBlockSize);
 
             return block;
         }
@@ -204,9 +260,7 @@ namespace eds
                     }
 
                     // roll to next Block, allocate one if neccessary
-                    Block* next = cur->next != nullptr
-                                      ? cur->next
-                                      : (cur->next = NewPoolBlock());
+                    Block* next = cur->next != nullptr ? cur->next : (cur->next = NewPoolBlock());
                     // if the current Block has beening failing for too many times, drop it
                     if (cur->counter > kFailureToleranceCount)
                     {
@@ -236,7 +290,115 @@ namespace eds
         Block* pooled_current_ = nullptr;
         // blocks for big chunk allocation
         Block* big_node_ = nullptr;
-
-        std::deque<DestructionHandle> dtors_;
     };
-}
+
+    template <typename MemoryProvider, size_t AlignmentSize = alignof(std::max_align_t)>
+    class BasicArena final : MemoryProvider, NonCopyable, NonMovable
+    {
+    public:
+        static_assert(AlignmentSize >= alignof(std::max_align_t));
+
+        BasicArena() {}
+		~BasicArena()
+		{
+			Clear();
+		}
+
+		using Ptr = std::unique_ptr<BasicArena>;
+		using SharedPtr = std::shared_ptr<BasicArena>;
+
+        void* Allocate(size_t sz) noexcept
+        {
+            return MemoryProvider::Allocate(RoundToAlign(sz, AlignmentSize));
+        }
+
+        template <typename T, typename... TArgs>
+        T* Construct(TArgs&&... args)
+        {
+            static_assert(alignof(T) <= AlignmentSize);
+
+            constexpr auto alloc_size = CalcAllocSize<T>();
+            auto ptr                  = MemoryProvider::Allocate(alloc_size);
+            if (ptr == nullptr)
+            {
+                return nullptr;
+            }
+
+            if constexpr (std::is_trivially_destructible_v<T>)
+            {
+                new (ptr) T(std::forward<TArgs>(args)...);
+
+                return reinterpret_cast<T*>(ptr);
+            }
+            else
+            {
+                auto handle_ptr = reinterpret_cast<DestructionHandle*>(ptr);
+                auto object_ptr = GetObjectPtr(handle_ptr);
+
+                new (object_ptr) T(std::forward<TArgs>(args)...);
+
+                handle_ptr->next     = head_;
+                handle_ptr->destruct = [](void* p) { reinterpret_cast<T*>(p)->~T(); };
+                head_                = handle_ptr;
+
+                return reinterpret_cast<T*>(object_ptr);
+            }
+        }
+
+        void Clear()
+        {
+            for (auto handle = head_; handle->next != nullptr; handle = handle->next)
+            {
+                handle->destruct(GetObjectPtr(handle));
+            }
+
+            head_ = GetPivotHandle();
+            MemoryProvider::Clear();
+        }
+
+        const MemoryProvider& GetProvider() const noexcept
+        {
+            return *this;
+        }
+
+    private:
+        struct DestructionHandle
+        {
+            DestructionHandle* next;
+            void (*destruct)(void*);
+        };
+
+        static DestructionHandle* GetPivotHandle() noexcept
+        {
+            static DestructionHandle handle{nullptr, [](void*) {}};
+
+            return &handle;
+        }
+
+        static void* GetObjectPtr(DestructionHandle* handle) noexcept
+        {
+            return AdvancePtr(handle, RoundToAlign(sizeof(DestructionHandle), AlignmentSize));
+        }
+
+        template <typename T>
+        constexpr static size_t CalcAllocSize() noexcept
+        {
+            constexpr auto aligned_size = RoundToAlign(sizeof(T), AlignmentSize);
+
+            if constexpr (std::is_trivially_destructible_v<T>)
+            {
+                return aligned_size;
+            }
+            else
+            {
+                return aligned_size + RoundToAlign(sizeof(DestructionHandle), AlignmentSize);
+            }
+        }
+
+        DestructionHandle* head_ = GetPivotHandle();
+    };
+
+    using Workspace = BasicArena<StackWorkspaceMemoryProvider<>>;
+    using Arena     = BasicArena<HeapGrowableMemoryProvider>;
+
+} // namespace eds
